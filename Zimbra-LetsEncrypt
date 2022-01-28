@@ -27,5 +27,10 @@
   
  10 - zmcontrol restart
    > Zimbra servisini yeniden başlatıyoruz.
- 
+   
+   
+  ## External Resources
+
+https://forums.zimbra.org/viewtopic.php?t=70012&p=302751#top
+https://blog.zimbra.com/2021/09/zimbra-skilz-how-to-use-zimbra-with-lets-encrypt-certificates/
    
