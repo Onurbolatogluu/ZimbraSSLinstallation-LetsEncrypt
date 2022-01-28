@@ -1,0 +1,31 @@
+ 1 - certbot certonly --manual --manual-auth-hook /etc/letsencrypt/acme-dns-auth.py --preferred-challenges dns --debug-challenges -d mail.example.com
+  >  Domainimiz için cerbot arayıcılığıyla sertifika dosyalarımızı oluşturuyoruz.
+ 
+ 2 - cp /etc/letsencrypt/live/mail.example.com/privkey.pem /opt/zimbra/ssl/zimbra/commercial/commercial.key
+  > Oluşturduğumuz SSL serfikamız içerisinde private key dosyamızı zimbranin commerial dizini altına commercial.key dosyasının içerisine yazıyoruz.
+  
+ 3 - wget -O /tmp/ISRG-X1.pem https://letsencrypt.org/certs/isrgrootx1.pem && wget -O /tmp/R3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem
+  > Gerekli olan chain dosyalarımızı wget ile indiriyoruz.
+  
+ 4 - cat /tmp/R3.pem > /etc/letsencrypt/live/mail.example.com/chain.pem 
+  > Chain dosyamızın içeriğini wget ile çektiğimiz dosya ile değiştiriyoruz.
+ 
+ 5 - cat /tmp/ISRG-X1.pem >> /etc/letsencrypt/live/mail.example.com/chain.pem
+  > Chain dosyamızın içeriğine wget ile çektiğimiz ISRG-X1.pem dosyamızı ekliyoruz.
+  
+ 6 - chmod o+rx mail.example.com/
+  > Diğer kullanıcıların SSL dizininde çalışabilmesi için yetkilerimizi tanımlıyoruz.
+  
+ 7 - su - zimbra
+  > Zimbra kullanıcısına geçiş yapıyoruz.
+  
+ 8 - /opt/zimbra/bin/zmcertmgr verifycrt comm /opt/zimbra/ssl/zimbra/commercial/commercial.key /home/kplus/mail.example.com/cert.pem /home/kplus/mail.example.com/chain.pem
+  > Dosyalarımızın doğruluğunu ve uyumluluğunu kontrol ediyoruz.
+  
+ 9 - /opt/zimbra/bin/zmcertmgr deploycrt comm /home/kplus/mail.example.com/cert.pem /home/kplus/mail.example.com/chain.pem
+  > SSL dosyalarımızı zimbra kullanıcısı ile sunucumuza deploy ediyoruz.
+  
+ 10 - zmcontrol restart
+   > Zimbra servisini yeniden başlatıyoruz.
+ 
+   
